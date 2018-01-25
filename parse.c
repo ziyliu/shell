@@ -14,10 +14,10 @@
 
 void init_info(parseInfo* p) {
     printf("init_info: initializing parseInfo\n");
-    //called in parse 
 
     //allocate commArray on the heap
-    *(p->commArray) = malloc(PIPE_MAXLINE, sizeof(commandType));
+    p->commArray = (struct commandType*) 
+                   malloc(PIPE_MAXLINE, sizeof(commandType));
       
 }
 
@@ -40,6 +40,13 @@ parseInfo* parse(char* cmdLine) {
     Result = malloc(sizeof(parseInfo));
     init_info(Result);
     cmd_pos = 0;
+
+    while(i=cmd_pos; i<MAXLINE; i++) {
+        if(cmdLine[i]==' ') break;
+        else {
+            command[i]=cmdLine[i];
+        }
+    }
 
     command[com_pos]='\0';
     parse_command(command, Result->commArray);
