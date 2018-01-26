@@ -15,18 +15,19 @@
 void init_info(parseInfo* p) {
     printf("init_info: initializing parseInfo\n");
 
-    //allocate commArray on the heap
-    p->commArray = (struct commandType*) 
-                   malloc(PIPE_MAXLINE, sizeof(commandType));
-      
+    p->inFileBool = 0;
+    p->outFileBool = 0;
+    p->bgBool = 0;
+
+    p->pipeNum = 0;
+
 }
 
 void parse_command(char* command, struct commandType* comm) {
     printf("parse_command: parsing a single command\n");
-    //populate commandType struct with command string
 
-    commandType->command = command;
-    commandType->varNum++;
+    comm->command = command;
+    comm->varNum++;
     
 }
 
@@ -36,19 +37,27 @@ parseInfo* parse(char* cmdLine) {
     char command[MAXLINE];
     int com_pos = -1;
 
-    if(cmdLine[-1]=='\n' && cmdLine[-1]=='\0') return NULL;
+    /* empty command */
+    if(cmdLine[com_pos]=='\n' && cmdLine[com_pos]=='\0') return NULL;
+
+    /* Allocate Result struct on the heap and initialize */
     Result = malloc(sizeof(parseInfo));
     init_info(Result);
-    cmd_pos = 0;
 
-    while(i=cmd_pos; i<MAXLINE; i++) {
+    com_pos = 0;
+
+    int i;
+    for(i=com_pos; i<MAXLINE; i++) {
         if(cmdLine[i]==' ') break;
         else {
             command[i]=cmdLine[i];
         }
     }
 
+    /* null-truncate the string */
+    com_pos = i;
     command[com_pos]='\0';
+
     parse_command(command, Result->commArray);
 
     return Result;
@@ -61,9 +70,9 @@ void print_info(parseInfo* p) {
 
     int i;
     /* print all the arguments */
-    for(i=0; p->pipeNum; i++) {
+    for(i=0; i<p->pipeNum; i++) {
         int argnum = i+1;
-        printf("arg%d: %s\n", argnum, p->commArray[i]);
+        printf("arg%d: %s\n", argnum, p->commArray[i].command);
     }
     
     char* inpipe;
@@ -85,5 +94,6 @@ void print_info(parseInfo* p) {
 }
 
 void free_info(parseInfo* info) {
+    printf("free_info: freeing memory associated to parseInfo struct\n");
     free(info);
 }

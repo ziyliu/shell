@@ -10,7 +10,7 @@ struct commandType {
     char* command;
     char* varList[MAX_VAR_NUM];
     int varNum;
-}
+};
 
 typedef struct {
     int inFileBool;
