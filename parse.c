@@ -35,11 +35,18 @@ void parse_command(char* command, struct commandType* comm) {
     comm->command[i] = '\0';
     i++;
 
-    comm->varList[varNum] = malloc(sizeof(char));
+    comm->varList[varNum] = malloc(sizeof(char)*MAXLINE);
     /* parse variables if they exist */
+
+    int var_pos = 0;
     while(command[i]!='\n' && command[i]!='\0') {
-        if(command[i]==' ') {
-            comm->varList[varNum] = malloc(sizeof(char))
+        if(command[i]==' ' && (command[i+1]!='\n' && command[i+1]!='\0')) {
+            comm->varNum++;
+            comm->varList[comm->varNum] = malloc(sizeof(char)*MAXLINE);
+            var_pos++;
+        }
+        else {
+            comm->varList[var_pos] = command[i];
         }
     }
 
