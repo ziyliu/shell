@@ -6,6 +6,11 @@
 #define PIPE_MAX_NUM 10
 #define FILE_MAX_SIZE 40
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
 struct commandType {
     char* command;
     char* varList[MAX_VAR_NUM];

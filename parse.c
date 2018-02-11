@@ -5,11 +5,6 @@
 
 #include "parse.h"
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #define MAXLINE 81
 
 void init_info(parseInfo* p) {
@@ -26,9 +21,29 @@ void init_info(parseInfo* p) {
 void parse_command(char* command, struct commandType* comm) {
     printf("parse_command: parsing a single command\n");
 
-    comm->command = command;
-    comm->varNum++;
+    comm->varNum = 0;
+    comm->command = malloc(sizeof(char)*MAXLINE);
+
+    int i = 0;
+    /* parse command first */
+    while(command[i]!='\n' && command[i]!='\0') {
+        if(command[i] == ' ') break;
+        comm->command[i] = command[i];
+        i++;
+    }
     
+    comm->command[i] = '\0';
+    i++;
+
+    comm->varList[varNum] = malloc(sizeof(char));
+    /* parse variables if they exist */
+    while(command[i]!='\n' && command[i]!='\0') {
+        if(command[i]==' ') {
+            comm->varList[varNum] = malloc(sizeof(char))
+        }
+    }
+
+    return;
 }
 
 parseInfo* parse(char* cmdLine) {
@@ -46,21 +61,21 @@ parseInfo* parse(char* cmdLine) {
 
     com_pos = 0;
 
-    int i;
-    for(i=com_pos; i<MAXLINE; i++) {
-        if(cmdLine[i]==' ') break;
-        else {
-            command[i]=cmdLine[i];
-        }
+    //support single command first, then move on to pipes
+    int i = com_pos;
+    while(cmdLine[i] != '\n' && cmdLine[i] != '\0') {
+        /*if(cmdLine[i] == '|') {
+            Result->pipeNum++;
+        }*/
+        command[i] = cmdLine[i];
+        i++;
     }
 
-    /* null-truncate the string */
-    com_pos = i;
-    command[com_pos]='\0';
-
-    parse_command(command, Result->commArray);
+    command[i] = '\0';
+    parse_command(command, &Result->commArray[com_pos]);
 
     return Result;
+
 }
 
 void print_info(parseInfo* p) {
@@ -75,15 +90,15 @@ void print_info(parseInfo* p) {
         printf("arg%d: %s\n", argnum, p->commArray[i].command);
     }
     
-    char* inpipe;
+    char inpipe[4];
     if(p->inFileBool) inpipe = "yes";
     else inpipe = "no";
 
-    char* outpipe;
+    char outpipe[4];
     if(p->outFileBool) outpipe = "yes";
     else outpipe = "no";
 
-    char* bg;
+    char bg[4];
     if(p->bgBool) bg = "yes";
     else bg = "no";
 
@@ -95,5 +110,7 @@ void print_info(parseInfo* p) {
 
 void free_info(parseInfo* info) {
     printf("free_info: freeing memory associated to parseInfo struct\n");
+
+    //free each commArray struct inside info
     free(info);
 }
