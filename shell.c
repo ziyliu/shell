@@ -11,7 +11,7 @@ int main(int agrc, char** argv) {
     parseInfo* info;
     
     while(1) { //change condition
-        //cmdLine = readline(printPrompt());
+        cmdLine = readline(printPrompt());
 
         info = parse(cmdLine);
         
@@ -24,6 +24,13 @@ int main(int agrc, char** argv) {
 
 /* prompt the user to input a command */
 void printPrompt() {
+    printf("/usr/foo% ");
 }
 
-//char* readline
+char* readline() {
+
+    char* cmdLine = malloc(sizeof(char)*MAXLINE);   
+
+    cmdLine = scanf("%s", cmdLine);
+
+}

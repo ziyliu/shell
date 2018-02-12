@@ -41,6 +41,7 @@ void parse_command(char* command, struct commandType* comm) {
 
     while(command[i]!='\n' && command[i]!='\0') {
         if(command[i]==' ' && (command[i+1]!='\n' && command[i+1]!='\0')) {
+            comm->varList[comm->varNum][var_pos] = '\0';
             comm->varNum++;
             comm->varList[comm->varNum] = malloc(sizeof(char)*MAXLINE);
             var_pos = 0;
@@ -121,6 +122,14 @@ void print_info(parseInfo* p) {
 void free_info(parseInfo* info) {
     printf("free_info: freeing memory associated to parseInfo struct\n");
 
+    int i;
+    for(i=0; i<info->pipeNum; i++) {
+        free(info->commArray[i].command);
+        int j;
+        for(j=0; j<commArray[i].varNum; j++) {
+            free(info->commArray[i].varList[j]);
+        }
+    }
     //free each commArray struct inside info
     free(info);
 
