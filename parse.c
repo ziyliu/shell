@@ -126,7 +126,7 @@ void free_info(parseInfo* info) {
     for(i=0; i<info->pipeNum; i++) {
         free(info->commArray[i].command);
         int j;
-        for(j=0; j<commArray[i].varNum; j++) {
+        for(j=0; j<info->commArray[i].varNum; j++) {
             free(info->commArray[i].varList[j]);
         }
     }

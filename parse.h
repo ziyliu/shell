@@ -35,4 +35,5 @@ parseInfo *parse(char* cmdLine);
 
 void free_info(parseInfo *info);
 
+void print_info(parseInfo* info);
 #endif

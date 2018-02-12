@@ -1,7 +1,22 @@
+/*
+ * Zi Ying Liu
+ */
 
 #include "parse.h"
 
 #define MAXLINE 81
+
+
+char* readline() {
+    char* cmdLine;
+    scanf("%s", cmdLine);
+
+    return cmdLine;
+}
+
+void printPrompt() {
+    printf("/usr/foo%%");
+}
 
 int main(int agrc, char** argv) {
 
@@ -11,7 +26,8 @@ int main(int agrc, char** argv) {
     parseInfo* info;
     
     while(1) { //change condition
-        cmdLine = readline(printPrompt());
+        printPrompt();
+        cmdLine = readline();
 
         info = parse(cmdLine);
         
@@ -20,17 +36,7 @@ int main(int agrc, char** argv) {
     }
 
     free_info(info);
+
+    return 0;
 }
 
-/* prompt the user to input a command */
-void printPrompt() {
-    printf("/usr/foo% ");
-}
-
-char* readline() {
-
-    char* cmdLine = malloc(sizeof(char)*MAXLINE);   
-
-    cmdLine = scanf("%s", cmdLine);
-
-}
