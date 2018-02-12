@@ -1,10 +1,12 @@
 
 #include "parse.h"
 
+#define MAXLINE 81
+
 int main(int agrc, char** argv) {
 
     char* cmdLine;
-    cmdLine = malloc(sizeof(char*MAXLINE));
+    cmdLine = malloc(sizeof(char)*MAXLINE);
 
     parseInfo* info;
     

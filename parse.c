@@ -35,19 +35,21 @@ void parse_command(char* command, struct commandType* comm) {
     comm->command[i] = '\0';
     i++;
 
-    comm->varList[varNum] = malloc(sizeof(char)*MAXLINE);
+    int var_pos = 0;
+    comm->varList[comm->varNum] = malloc(sizeof(char)*MAXLINE);
     /* parse variables if they exist */
 
-    int var_pos = 0;
     while(command[i]!='\n' && command[i]!='\0') {
         if(command[i]==' ' && (command[i+1]!='\n' && command[i+1]!='\0')) {
             comm->varNum++;
             comm->varList[comm->varNum] = malloc(sizeof(char)*MAXLINE);
-            var_pos++;
+            var_pos = 0;
         }
         else {
-            comm->varList[var_pos] = command[i];
+            comm->varList[comm->varNum][var_pos] = command[i];
+            var_pos++;
         }
+        i++;
     }
 
     return;
@@ -98,21 +100,22 @@ void print_info(parseInfo* p) {
     }
     
     char inpipe[4];
-    if(p->inFileBool) inpipe = "yes";
-    else inpipe = "no";
+    if(p->inFileBool) strncpy(inpipe, "yes", 4);
+    else strncpy(inpipe, "no", 4);
 
     char outpipe[4];
-    if(p->outFileBool) outpipe = "yes";
-    else outpipe = "no";
+    if(p->outFileBool) strncpy(outpipe, "yes", 4);
+    else strncpy(outpipe, "no", 4);
 
     char bg[4];
-    if(p->bgBool) bg = "yes";
-    else bg = "no";
+    if(p->bgBool) strncpy(bg, "yes", 4);
+    else strncpy(bg, "no", 4);
 
     printf("inpipe: %s\n", inpipe);
     printf("outpipe: %s\n", outpipe);
     printf("background: %s\n", bg);
 
+    return;
 }
 
 void free_info(parseInfo* info) {
@@ -120,4 +123,6 @@ void free_info(parseInfo* info) {
 
     //free each commArray struct inside info
     free(info);
+
+    return;
 }
