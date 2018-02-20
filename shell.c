@@ -9,15 +9,8 @@
 enum BUILTIN_COMMANDS { NO_SUCH_BUILTIN=0, EXIT, JOBS };
 
 char* buildPrompt() {
-    return "%";
+    return "/usr/foo% ";
 }
-
-/*char* readline(char* prompt) {
-    char* cmdLine;
-    printf("%s", prompt);
-
-    return cmdLine;
-}*/
 
 int isBuiltInCommand(char* cmd) {
     if(strncmp(cmd, "exit", strlen("exit"))==0) return EXIT;
@@ -30,6 +23,7 @@ int main(int agrc, char** argv) {
 
     char* cmdLine;
     parseInfo* info;
+    struct commandType* com;
    
     #ifdef UNIX
         fprintf(stdout, "This is the UNIX version\n");
@@ -41,14 +35,19 @@ int main(int agrc, char** argv) {
 
     while(1) { //change condition
 
+        //int childPID;
+
         cmdLine = malloc(sizeof(char)*MAXLINE);
         #ifdef UNIX
-            cmdLine = readline(buildPrompt());
-            if(cmdLine==NULL) {
-                fprintf(stderr, "Unable to read command\n");
-                continue;
-            }
+        
+        cmdLine = readline(buildPrompt());
+        if(cmdLine==NULL) {
+            fprintf(stderr, "Unable to read command\n");
+            continue;
+        }
         #endif
+
+        //history and other flags here
 
         info = parse(cmdLine);
         if(info == NULL) {
@@ -58,11 +57,26 @@ int main(int agrc, char** argv) {
 
         //print if there is input direction
         print_info(info);
+
+
+        /*
+        com = &info->CommArray
+        if((com == NULL) || (comm->command==NULL)) {
+            free_info(info)
+            free(cmdLine);
+            continue;
+        }
+        */
+
+        //com->command tells the command name of com
+
+        //if(isBuiltInCommand(com->command) == EXIT) exit(1);
+         
         free_info(info);
         free(cmdLine);
     }
 
     
-    return 0;
+    exit(0);
 }
 

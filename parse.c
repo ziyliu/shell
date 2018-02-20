@@ -23,19 +23,27 @@ void parse_command(char* command, struct commandType* comm) {
 
     comm->varNum = 0;
     comm->command = malloc(sizeof(char)*MAXLINE);
+    comm->varList[0] = malloc(sizeof(char)*MAXLINE); 
+    
 
     int i = 0;
+    int var_pos = 0;
     /* parse command first */
     while(command[i]!='\n' && command[i]!='\0') {
         if(command[i] == ' ') break;
         comm->command[i] = command[i];
+        comm->varList[0][var_pos] = command[i];
         i++;
+        var_pos++;
     }
-    
+
+    comm->varList[0][var_pos] = '\0';
+    comm->varNum++;
+
     comm->command[i] = '\0';
     i++;
 
-    int var_pos = 0;
+    var_pos = 0;
     comm->varList[comm->varNum] = malloc(sizeof(char)*MAXLINE);
     /* parse variables if they exist */
 
@@ -53,7 +61,7 @@ void parse_command(char* command, struct commandType* comm) {
         i++;
     }
 
-    return;
+    comm->varNum++;
 }
 
 parseInfo* parse(char* cmdLine) {
@@ -72,16 +80,19 @@ parseInfo* parse(char* cmdLine) {
     com_pos = 0;
 
     //support single command first, then move on to pipes
-    int i = com_pos;
+    int i = 0;
     while(cmdLine[i] != '\n' && cmdLine[i] != '\0') {
-        /*if(cmdLine[i] == '|') {
-            Result->pipeNum++;
-        }*/
         command[i] = cmdLine[i];
+        
+        if(cmdLine[i]=='>') Result->outFileBool = 1;
+        if(cmdLine[i]=='<') Result->inFileBool = 1;
+        if(cmdLine[i]=='&') Result->bgBool = 1;
+
         i++;
     }
 
     command[i] = '\0';
+
     parse_command(command, &Result->commArray[com_pos]);
 
     return Result;
@@ -91,15 +102,14 @@ parseInfo* parse(char* cmdLine) {
 void print_info(parseInfo* p) {
 
     printf("print_info: printing info about parseInfo struct\n");
-    //printf("%: filename of program to execute &\n");
 
     int i;
     /* print all the arguments */
-    for(i=0; i<p->pipeNum; i++) {
+    for(i=0; i<p->commArray[0].varNum; i++) {
         int argnum = i+1;
-        printf("arg%d: %s\n", argnum, p->commArray[i].command);
+        printf("arg%d: %s\n", argnum, p->commArray[0].varList[i]);
     }
-    
+
     char inpipe[4];
     if(p->inFileBool) strncpy(inpipe, "yes", 4);
     else strncpy(inpipe, "no", 4);
