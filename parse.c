@@ -1,5 +1,6 @@
 /*
  * Filename: parse.c
+ *
  * Author: Zi Ying Liu
  */
 
@@ -28,14 +29,19 @@ void parse_command(char* command, struct commandType* comm) {
 
     int i = 0;
     int var_pos = 0;
+    int valid_comm = 0;
+
     /* parse command first */
     while(command[i]!='\n' && command[i]!='\0') {
         if(command[i] == ' ') break;
+        valid_comm = 1;
         comm->command[i] = command[i];
         comm->varList[0][var_pos] = command[i];
         i++;
         var_pos++;
     }
+
+    if(valid_comm==0) return;
 
     comm->varList[0][var_pos] = '\0';
     comm->varNum++;
@@ -47,6 +53,7 @@ void parse_command(char* command, struct commandType* comm) {
     comm->varList[comm->varNum] = malloc(sizeof(char)*MAXLINE);
     /* parse variables if they exist */
 
+    int valid_arg = 0;
     while(command[i]!='\n' && command[i]!='\0') {
         if(command[i]==' ' && (command[i+1]!='\n' && command[i+1]!='\0')) {
             comm->varList[comm->varNum][var_pos] = '\0';
@@ -55,13 +62,14 @@ void parse_command(char* command, struct commandType* comm) {
             var_pos = 0;
         }
         else {
+            valid_arg = 1;
             comm->varList[comm->varNum][var_pos] = command[i];
             var_pos++;
         }
         i++;
     }
 
-    comm->varNum++;
+    if(valid_arg) comm->varNum++;
 }
 
 parseInfo* parse(char* cmdLine) {
@@ -126,7 +134,6 @@ void print_info(parseInfo* p) {
     printf("outpipe: %s\n", outpipe);
     printf("background: %s\n", bg);
 
-    return;
 }
 
 void free_info(parseInfo* info) {
@@ -143,5 +150,4 @@ void free_info(parseInfo* info) {
     //free each commArray struct inside info
     free(info);
 
-    return;
 }
