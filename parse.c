@@ -81,7 +81,6 @@ parseInfo* parse(char* cmdLine) {
     /* empty command */
     if(cmdLine[com_pos]=='\n' && cmdLine[com_pos]=='\0') return NULL;
 
-    /* Allocate Result struct on the heap and initialize */
     Result = malloc(sizeof(parseInfo));
     init_info(Result);
 
@@ -112,20 +111,24 @@ void print_info(parseInfo* p) {
     printf("print_info: printing info about parseInfo struct\n");
 
     int i;
-    /* print all the arguments */
+
+    /* print all arguments */
     for(i=0; i<p->commArray[0].varNum; i++) {
         int argnum = i+1;
         printf("arg%d: %s\n", argnum, p->commArray[0].varList[i]);
     }
 
+    /* infile */
     char inpipe[4];
     if(p->inFileBool) strncpy(inpipe, "yes", 4);
     else strncpy(inpipe, "no", 4);
 
+    /* outfile */
     char outpipe[4];
     if(p->outFileBool) strncpy(outpipe, "yes", 4);
     else strncpy(outpipe, "no", 4);
 
+    /* background */
     char bg[4];
     if(p->bgBool) strncpy(bg, "yes", 4);
     else strncpy(bg, "no", 4);
@@ -147,7 +150,7 @@ void free_info(parseInfo* info) {
             free(info->commArray[i].varList[j]);
         }
     }
-    //free each commArray struct inside info
+
     free(info);
 
 }

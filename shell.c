@@ -5,11 +5,23 @@
 #include "parse.h"
 
 #define MAXLINE 81
+#define ROOT "."
 
 enum BUILTIN_COMMANDS { NO_SUCH_BUILTIN=0, EXIT, JOBS };
 
-char* buildPrompt() {
-    return "/usr/foo% ";
+char* buildPrompt(char* path_buf) {
+    int path_size = pathconf(ROOT, _PC_PATH_MAX);
+    char* path;
+
+    if((path_buf = (char*)malloc((size_t)path_size))!=NULL) {
+        path = getcwd(path_buf, (size_t)path_size);       
+    }
+
+    if(path!=NULL) {
+        strncat(path, "% ", strlen(path)+3);
+    }
+
+    return path;
 }
 
 int isBuiltInCommand(char* cmd) {
@@ -39,14 +51,16 @@ int main(int agrc, char** argv) {
 
         cmdLine = malloc(sizeof(char)*MAXLINE);
         #ifdef UNIX
-        
-        cmdLine = readline(buildPrompt());
+        char* path_buf;
+        cmdLine = readline(buildPrompt(path_buf));
         if(cmdLine==NULL) {
             fprintf(stderr, "Unable to read command\n");
             continue;
         }
         #endif
 
+        //TODO:
+        //make sure absolute/relative paths are supported
         //history and other flags here
 
         info = parse(cmdLine);
@@ -55,6 +69,7 @@ int main(int agrc, char** argv) {
             continue;
         }
 
+        execvp(info->commArray[0].command, info->commArray[0].varList);
         //print if there is input direction
         print_info(info);
 
@@ -74,6 +89,7 @@ int main(int agrc, char** argv) {
          
         free_info(info);
         free(cmdLine);
+        free(path_buf);
     }
 
     
