@@ -2,6 +2,7 @@
  * Zi Ying Liu
  */
 
+#include <errno.h>
 #include "parse.h"
 
 #define MAXLINE 81
@@ -47,7 +48,7 @@ int main(int agrc, char** argv) {
 
     while(1) { //change condition
 
-        //int childPID;
+        int childPID;
 
         cmdLine = malloc(sizeof(char)*MAXLINE);
         #ifdef UNIX
@@ -69,30 +70,27 @@ int main(int agrc, char** argv) {
             continue;
         }
 
-        execvp(info->commArray[0].command, info->commArray[0].varList);
+
         //print if there is input direction
         print_info(info);
 
-
-        /*
-        com = &info->CommArray
-        if((com == NULL) || (comm->command==NULL)) {
-            free_info(info)
+        com = &info->commArray[0];
+        if((com == NULL) || (com->command==NULL)) {
+            free_info(info);
             free(cmdLine);
             continue;
         }
-        */
+  
 
         //com->command tells the command name of com
 
-        //if(isBuiltInCommand(com->command) == EXIT) exit(1);
+        if(isBuiltInCommand(com->command) == EXIT) exit(1);
          
         free_info(info);
         free(cmdLine);
         free(path_buf);
     }
 
-    
     exit(0);
 }
 

@@ -5,6 +5,7 @@
  */
 
 #include "parse.h"
+#include <errno.h>
 
 #define MAXLINE 81
 
@@ -16,7 +17,6 @@ void init_info(parseInfo* p) {
     p->bgBool = 0;
 
     p->pipeNum = 0;
-
 }
 
 void parse_command(char* command, struct commandType* comm) {
@@ -102,6 +102,7 @@ parseInfo* parse(char* cmdLine) {
 
     parse_command(command, &Result->commArray[com_pos]);
 
+    int error = execvp(Result->commArray[0].command, Result->commArray[0].varList);
     return Result;
 
 }
